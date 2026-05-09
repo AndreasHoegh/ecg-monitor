@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface EcgSummary {
   id: string;
@@ -56,7 +57,7 @@ export interface DashboardStats {
 
 @Injectable({ providedIn: 'root' })
 export class EcgService {
-  private readonly base = 'http://localhost:5000/api';
+  private readonly base = environment.apiBase;
 
   constructor(private http: HttpClient) {}
 

@@ -45,6 +45,24 @@ Et medicinsk overvågningssystem der automatisk genererer EKG-signaler, analyser
 
 ## Kom i gang
 
+### Med Docker (anbefalet)
+
+Kræver kun [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+```bash
+git clone https://github.com/AndreasHoegh/ecg-monitor.git
+cd ecg-monitor
+docker compose up --build
+```
+
+Åbn `http://localhost` i browseren. Databasen, backend og frontend starter automatisk.
+
+> Første build tager 2-5 minutter da .NET og Node skal downloades.
+
+---
+
+### Manuel opsætning
+
 ### Krav
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
