@@ -1,6 +1,7 @@
 # EKG Monitor
+Programmeret med hjælp fra Claude Code.
 
-Et medicinsk overvågningssystem der automatisk genererer EKG-signaler, analyserer dem med AI og præsenterer anomalier til læge-review.
+Et medicinsk overvågningssystem der automatisk genererer EKG-signaler, analyserer og præsenterer anomalier til læge-review.
 
 ## Arkitektur
 
