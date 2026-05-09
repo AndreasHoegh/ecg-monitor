@@ -3,8 +3,12 @@
 
   <div class="stat-cards" *ngIf="stats">
     <div class="stat-card total" (click)="goToList()">
+      <div class="stat-value">{{ stats.totalRecords }}</div>
+      <div class="stat-label">Målinger i alt</div>
+    </div>
+    <div class="stat-card anomaly" (click)="goToList()">
       <div class="stat-value">{{ stats.totalAnomalies }}</div>
-      <div class="stat-label">Anomalier i alt</div>
+      <div class="stat-label">Anomalier fundet</div>
     </div>
     <div class="stat-card pending" (click)="goToList('Pending')">
       <div class="stat-value">{{ stats.pendingReviews }}</div>

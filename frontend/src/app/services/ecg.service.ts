@@ -47,6 +47,7 @@ export interface CreateReview {
 }
 
 export interface DashboardStats {
+  totalRecords: number;
   totalAnomalies: number;
   pendingReviews: number;
   reviewedToday: number;

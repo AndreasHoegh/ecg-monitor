@@ -88,7 +88,7 @@ body {
 
 .stat-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 20px;
 }
@@ -102,8 +102,9 @@ body {
   cursor: pointer;
   transition: border-color 0.15s, transform 0.1s;
   &:hover { border-color: var(--accent); transform: translateY(-2px); }
-  &.pending { border-left: 3px solid var(--medium); }
   &.total { border-left: 3px solid var(--accent); }
+  &.anomaly { border-left: 3px solid var(--critical); }
+  &.pending { border-left: 3px solid var(--medium); }
   &.reviewed { border-left: 3px solid var(--reviewed); }
 }
 

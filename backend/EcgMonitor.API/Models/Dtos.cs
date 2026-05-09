@@ -45,6 +45,7 @@ public record EcgSummaryDto(
 );
 
 public record DashboardStatsDto(
+    int TotalRecords,
     int TotalAnomalies,
     int PendingReviews,
     int ReviewedToday,

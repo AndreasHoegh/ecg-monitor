@@ -40,7 +40,8 @@ Et medicinsk overvågningssystem der automatisk genererer EKG-signaler, analyser
 | Frontend | Angular 18, Chart.js, SCSS |
 | Backend | .NET 10, ASP.NET Core Web API |
 | Database | PostgreSQL 17/18, Entity Framework Core 8 |
-| ORM | Npgsql.EntityFrameworkCore.PostgreSQL |
+| ORM | Npgsql.EntityFrameworkCore.PostgreSQL 8 |
+| AI | Lokal signalklassifikation (ingen ekstern API) |
 
 ## Kom i gang
 
@@ -60,7 +61,7 @@ CREATE DATABASE ecgmonitor;
 
 ### 2. Konfiguration
 
-Rediger `backend/EcgMonitor.API/appsettings.json`:
+Rediger `backend/EcgMonitor.API/appsettings.json` og tilpas connection string til din PostgreSQL-installation:
 
 ```json
 {
@@ -70,7 +71,7 @@ Rediger `backend/EcgMonitor.API/appsettings.json`:
 }
 ```
 
-> Tabeller oprettes automatisk ved første opstart via EF Core migrations.
+> Tabeller oprettes automatisk ved første opstart via EF Core migrations. Ingen API-nøgler er nødvendige — AI-diagnosen kører lokalt.
 
 ### 3. Start backend
 
@@ -152,7 +153,7 @@ ecg-monitor/
 
 ## Udvidelsesmuligheder
 
-- Skift den lokale AI-klassifikation ud med [Claude API](https://console.anthropic.com) for ægte AI-diagnose
+- Skift den lokale AI-klassifikation ud med en rigtig LLM (f.eks. Claude API) for ægte AI-diagnose
 - Tilføj brugerautentifikation til læge-reviewet
 - Kobl til rigtige EKG-enheder via HL7 FHIR eller proprietære APIs
 - Tilføj SignalR for real-time push i stedet for polling

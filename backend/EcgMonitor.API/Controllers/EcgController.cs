@@ -14,17 +14,19 @@ public class EcgController(AppDbContext db) : ControllerBase
     {
         var today = DateTime.UtcNow.Date;
 
-        var total = await db.EcgRecords.CountAsync();
-        var pending = await db.EcgRecords.CountAsync(r => r.Status == ReviewStatus.Pending);
+        var totalRecords = await db.EcgRecords.CountAsync();
+        var totalAnomalies = await db.EcgRecords.CountAsync(r => r.IsAnomaly);
+        var pending = await db.EcgRecords.CountAsync(r => r.IsAnomaly && r.Status == ReviewStatus.Pending);
         var reviewedToday = await db.DoctorReviews.CountAsync(r => r.ReviewedAt >= today);
         var diagnoses = await db.EcgRecords
-            .Where(r => r.AiDiagnosis != null)
+            .Where(r => r.IsAnomaly && r.AiDiagnosis != null)
             .GroupBy(r => r.AiDiagnosis!)
             .Select(g => new { Diagnosis = g.Key, Count = g.Count() })
             .ToListAsync();
 
         return new DashboardStatsDto(
-            total,
+            totalRecords,
+            totalAnomalies,
             pending,
             reviewedToday,
             diagnoses.ToDictionary(d => d.Diagnosis, d => d.Count)
