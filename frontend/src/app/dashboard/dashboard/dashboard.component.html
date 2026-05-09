@@ -1,0 +1,63 @@
+<div class="dashboard">
+  <h1>EKG Overvågning</h1>
+
+  <div class="stat-cards" *ngIf="stats">
+    <div class="stat-card total" (click)="goToList()">
+      <div class="stat-value">{{ stats.totalAnomalies }}</div>
+      <div class="stat-label">Anomalier i alt</div>
+    </div>
+    <div class="stat-card pending" (click)="goToList('Pending')">
+      <div class="stat-value">{{ stats.pendingReviews }}</div>
+      <div class="stat-label">Afventer review</div>
+    </div>
+    <div class="stat-card reviewed" (click)="goToList('Reviewed')">
+      <div class="stat-value">{{ stats.reviewedToday }}</div>
+      <div class="stat-label">Reviewet i dag</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="card">
+      <h2>Kritiske sager (afventer)</h2>
+      <div *ngIf="recentCritical.length === 0" class="empty">
+        Ingen kritiske sager
+      </div>
+      <table *ngIf="recentCritical.length > 0" class="ecg-table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Diagnose</th>
+            <th>BPM</th>
+            <th>Tid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ecg of recentCritical"
+              class="clickable"
+              [routerLink]="['/ecg', ecg.id]">
+            <td>{{ ecg.patientId }}</td>
+            <td>{{ ecg.aiDiagnosis }}</td>
+            <td>{{ ecg.heartRateBpm | number:'1.0-0' }}</td>
+            <td>{{ ecg.recordedAt | date:'HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Diagnoser fordeling</h2>
+      <div *ngIf="diagnosisEntries().length === 0" class="empty">Ingen data endnu</div>
+      <div class="diagnosis-bar" *ngFor="let entry of diagnosisEntries()">
+        <div class="diagnosis-name">{{ entry.key }}</div>
+        <div class="bar-wrap">
+          <div class="bar-fill"
+               [style.width.%]="(entry.value / (stats?.totalAnomalies || 1)) * 100">
+          </div>
+        </div>
+        <div class="diagnosis-count">{{ entry.value }}</div>
+      </div>
+    </section>
+  </div>
+
+  <p class="auto-refresh">Opdateres automatisk hvert 15. sekund</p>
+</div>

@@ -1,0 +1,87 @@
+<div class="ecg-detail">
+  <button class="back-btn" routerLink="/ecg">← Tilbage</button>
+
+  <div *ngIf="loading" class="loading">Indlæser EKG-data...</div>
+
+  <ng-container *ngIf="!loading && record">
+    <div class="detail-header">
+      <div>
+        <h1>Patient {{ record.patientId }}</h1>
+        <span class="recorded-at">{{ record.recordedAt | date:'dd. MMMM yyyy HH:mm' }}</span>
+      </div>
+      <span class="urgency-badge large" [class]="record.aiUrgency ?? 'low'">
+        {{ urgencyLabel(record.aiUrgency) }}
+      </span>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-label">Puls</div>
+        <div class="info-value">{{ record.heartRateBpm | number:'1.0-0' }} BPM</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">AI-diagnose</div>
+        <div class="info-value diagnosis">{{ record.aiDiagnosis }}</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">Konfidans</div>
+        <div class="info-value">{{ (record.aiConfidence ?? 0) | percent:'1.0-0' }}</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">Sample rate</div>
+        <div class="info-value">{{ record.sampleRateHz }} Hz</div>
+      </div>
+    </div>
+
+    <section class="card ai-reasoning">
+      <h2>AI-begrundelse</h2>
+      <p>{{ record.aiReasoning }}</p>
+    </section>
+
+    <section class="card ecg-chart-section">
+      <h2>EKG-signal (10 sekunder)</h2>
+      <div class="chart-container">
+        <canvas #ecgCanvas></canvas>
+      </div>
+    </section>
+
+    <section class="card review-section" *ngIf="record.status === 'Pending'">
+      <h2>Læge-review</h2>
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+        <div class="form-row">
+          <label>Lægenavn *</label>
+          <input formControlName="doctorName" type="text" placeholder="Dr. Navn" />
+        </div>
+        <div class="form-row">
+          <label>Diagnose *</label>
+          <input formControlName="diagnosis" type="text" placeholder="Klinisk diagnose" />
+        </div>
+        <div class="form-row">
+          <label>Noter</label>
+          <textarea formControlName="notes" rows="3" placeholder="Kliniske observationer..."></textarea>
+        </div>
+        <div class="form-row checkbox-row">
+          <label>
+            <input formControlName="agreedWithAi" type="checkbox" />
+            Enig med AI-diagnosen
+          </label>
+        </div>
+        <div *ngIf="submitError" class="error-msg">{{ submitError }}</div>
+        <button type="submit" [disabled]="reviewForm.invalid || submitting" class="submit-btn">
+          {{ submitting ? 'Sender...' : 'Indsend review' }}
+        </button>
+      </form>
+    </section>
+
+    <section class="card review-done" *ngIf="record.status === 'Reviewed' && record.review">
+      <h2>Læge-review</h2>
+      <div class="review-info">
+        <div><strong>Læge:</strong> {{ record.review!.doctorName }}</div>
+        <div><strong>Diagnose:</strong> {{ record.review!.diagnosis }}</div>
+        <div><strong>Enig med AI:</strong> {{ record.review!.agreedWithAi ? 'Ja' : 'Nej' }}</div>
+        <div *ngIf="record.review!.notes"><strong>Noter:</strong> {{ record.review!.notes }}</div>
+        <div><strong>Reviewet:</strong> {{ record.review!.reviewedAt | date:'dd. MMMM yyyy HH:mm' }}</div>
+      </div>
+    </section>
+  </ng-container>
+</div>

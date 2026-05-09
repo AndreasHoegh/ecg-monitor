@@ -1,0 +1,71 @@
+<div class="ecg-list">
+  <div class="list-header">
+    <h1>EKG-optagelser</h1>
+    <div class="filters">
+      <select [(ngModel)]="statusFilter" (change)="load()" name="status">
+        <option value="">Alle statusser</option>
+        <option value="Pending">Afventer review</option>
+        <option value="Reviewed">Reviewet</option>
+      </select>
+      <select [(ngModel)]="urgencyFilter" (change)="load()" name="urgency">
+        <option value="">Alle prioriteter</option>
+        <option value="critical">Kritisk</option>
+        <option value="high">Høj</option>
+        <option value="medium">Medium</option>
+        <option value="low">Lav</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab" [class.active]="activeTab === 'anomaly'" (click)="activeTab = 'anomaly'">
+      Anomalier <span class="tab-count">{{ anomalies.length }}</span>
+    </button>
+    <button class="tab" [class.active]="activeTab === 'normal'" (click)="activeTab = 'normal'">
+      Normal <span class="tab-count">{{ normals.length }}</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Indlæser...</div>
+
+  <div *ngIf="!loading && activeRecords.length === 0" class="empty">
+    Ingen {{ activeTab === 'anomaly' ? 'anomalier' : 'normale EKG\'er' }} fundet endnu — systemet genererer data hvert 20. sekund
+  </div>
+
+  <div *ngIf="!loading && activeRecords.length > 0" class="table-wrap">
+    <table class="ecg-table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Diagnose</th>
+          <th>BPM</th>
+          <th>Konfidans</th>
+          <th *ngIf="activeTab === 'anomaly'">Prioritet</th>
+          <th>Status</th>
+          <th>Tidspunkt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of activeRecords"
+            [routerLink]="['/ecg', r.id]"
+            class="clickable">
+          <td>{{ r.patientId }}</td>
+          <td>{{ r.aiDiagnosis }}</td>
+          <td>{{ r.heartRateBpm | number:'1.0-0' }}</td>
+          <td>{{ (r.aiConfidence ?? 0) | percent:'1.0-0' }}</td>
+          <td *ngIf="activeTab === 'anomaly'">
+            <span class="urgency-badge" [class]="urgencyClass(r.aiUrgency)">
+              {{ r.aiUrgency }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [class.reviewed]="r.status === 'Reviewed'">
+              {{ r.status === 'Pending' ? 'Afventer' : 'Reviewet' }}
+            </span>
+          </td>
+          <td>{{ r.recordedAt | date:'dd/MM HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
